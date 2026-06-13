@@ -8,6 +8,7 @@ export type Product = {
     price: number;
     quantity: number;
     unit: string;
+    unit_label: string;
     category: { id: number; name: string } | null;
 };
 

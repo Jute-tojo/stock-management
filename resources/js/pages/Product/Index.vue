@@ -40,8 +40,6 @@ watch(search, (val) => {
     debouncedSearch(val);
 });
 
-const unitLabelMap = Object.fromEntries(props.units.map((u) => [u.value, u.label]));
-
 const dialogRef = ref<InstanceType<typeof ProductDialog>>();
 
 const { destroy } = useProductForm();
@@ -105,7 +103,7 @@ const { destroy } = useProductForm();
                         <td class="px-4 py-3 text-sm">{{ product.category?.name ?? '-' }}</td>
                         <td class="px-4 py-3 text-right text-sm">{{ Number(product.price).toFixed(2) }}</td>
                         <td class="px-4 py-3 text-right text-sm">{{ product.quantity }}</td>
-                        <td class="px-4 py-3 text-sm">{{ unitLabelMap[product.unit] ?? product.unit }}</td>
+                        <td class="px-4 py-3 text-sm">{{ product.unit_label }}</td>
                         <td class="px-4 py-3 text-right">
                             <div class="flex items-center justify-end gap-1">
                                 <Button variant="ghost" size="icon-sm" @click="dialogRef?.openEditModal(product)">

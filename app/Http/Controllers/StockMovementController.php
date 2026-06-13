@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StockMovementRequest;
-use App\Models\Product;
+use App\Services\ProductService;
 use App\Services\StockMovementService;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -13,6 +13,7 @@ class StockMovementController extends Controller
 {
     public function __construct(
         private readonly StockMovementService $stockMovementService,
+        private readonly ProductService $productService,
     ) {}
 
     public function index(): Response
@@ -21,7 +22,7 @@ class StockMovementController extends Controller
 
         return Inertia::render('StockMovement/Index', [
             'movements' => $this->stockMovementService->list($search),
-            'products' => Product::select('id', 'name', 'sku')->orderBy('name')->get(),
+            'products' => $this->productService->listAll(),
             'filters' => $search,
         ]);
     }

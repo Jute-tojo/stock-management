@@ -17,6 +17,14 @@ class ProductService
             ->paginate($perPage);
     }
 
+    public function listAll(): array
+    {
+        return Product::select('id', 'name', 'sku', 'image', 'quantity', 'unit')
+            ->orderBy('name')
+            ->get()
+            ->toArray();
+    }
+
     private function applySearch(Builder $query, ?string $keyword): Builder
     {
         if ($keyword) {

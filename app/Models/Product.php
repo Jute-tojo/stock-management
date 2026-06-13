@@ -20,7 +20,7 @@ class Product extends Model
         'unit',
     ];
 
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url', 'unit_label'];
 
     protected function casts(): array
     {
@@ -33,6 +33,11 @@ class Product extends Model
     public function getImageUrlAttribute(): ?string
     {
         return $this->image ? url('storage/' . $this->image) : null;
+    }
+
+    public function getUnitLabelAttribute(): string
+    {
+        return $this->unit?->label() ?? (string) $this->unit;
     }
 
     public function category(): BelongsTo

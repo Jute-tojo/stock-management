@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toRef, watch } from 'vue';
-import { X } from '@lucide/vue';
+import { X, PackageIcon } from '@lucide/vue';
 import InputError from '@/components/InputError.vue';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -56,11 +56,20 @@ watch(() => props.modelValue, (id) => {
                     v-for="product in filteredProducts"
                     :key="product.id"
                     type="button"
-                    class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-accent"
+                    class="flex w-full items-center gap-3 px-3 py-2 text-left text-sm hover:bg-accent"
                     @mousedown.prevent="selectProduct(product); emit('update:modelValue', product.id)"
                 >
-                    <span class="font-medium">{{ product.name }}</span>
-                    <span class="text-muted-foreground">{{ product.sku }}</span>
+                    <img
+                        v-if="product.image_url"
+                        :src="product.image_url"
+                        alt=""
+                        class="size-8 rounded object-cover"
+                    />
+                    <PackageIcon v-else class="size-8 text-muted-foreground shrink-0" />
+                    <div class="flex-1 truncate">
+                        <span class="font-medium">{{ product.name }}</span>
+                        <span class="ml-2 text-muted-foreground">{{ product.sku }}</span>
+                    </div>
                 </button>
             </div>
             <p v-if="showDropdown && productSearch && filteredProducts.length === 0" class="mt-1 text-sm text-muted-foreground">
@@ -69,6 +78,13 @@ watch(() => props.modelValue, (id) => {
         </div>
 
         <div v-else class="flex items-start gap-3 rounded-lg border bg-muted/30 p-3">
+            <img
+                v-if="selectedProduct.image_url"
+                :src="selectedProduct.image_url"
+                alt=""
+                class="size-12 rounded-md object-cover"
+            />
+            <PackageIcon v-else class="size-12 text-muted-foreground shrink-0" />
             <div class="flex-1 space-y-1">
                 <div class="flex items-center gap-2">
                     <span class="font-medium">{{ selectedProduct.name }}</span>
@@ -76,7 +92,7 @@ watch(() => props.modelValue, (id) => {
                 </div>
                 <div class="flex gap-4 text-sm text-muted-foreground">
                     <span>Qty: <strong>{{ selectedProduct.quantity }}</strong></span>
-                    <span>Unit: <strong>{{ selectedProduct.unit }}</strong></span>
+                    <span>Unit: <strong>{{ selectedProduct.unit_label }}</strong></span>
                 </div>
             </div>
             <Button type="button" variant="ghost" size="icon-sm" @click="clearProduct(); emit('update:modelValue', null)">
