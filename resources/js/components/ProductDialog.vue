@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Tags } from '@lucide/vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,6 +38,10 @@ const {
     closeModal,
 } = useProductForm();
 
+const emit = defineEmits<{
+    'open-categories': [];
+}>();
+
 defineExpose({ openCreateModal, openEditModal });
 </script>
 
@@ -66,8 +71,8 @@ defineExpose({ openCreateModal, openEditModal });
                 <div class="grid grid-cols-2 gap-4">
                     <div class="grid gap-2">
                         <Label for="category">Category</Label>
-                        <Select v-model="form.category_id">
-                            <SelectTrigger id="category">
+                        <Select v-model="form.category_id" v-if="categories.length">
+                            <SelectTrigger id="category" class="w-full">
                                 <SelectValue placeholder="Select category" />
                             </SelectTrigger>
                             <SelectContent>
@@ -76,6 +81,10 @@ defineExpose({ openCreateModal, openEditModal });
                                 </SelectItem>
                             </SelectContent>
                         </Select>
+                        <Button v-else variant="outline" size="sm" @click="emit('open-categories')">
+                            <Tags class="size-4" />
+                            Add Category
+                        </Button>
                         <InputError :message="form.errors.category_id" />
                     </div>
 

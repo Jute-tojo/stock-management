@@ -9,7 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class StockMovementService
 {
-    public function list(?string $search = null, int $perPage = 15): LengthAwarePaginator
+    public function list(?string $search = null, int $perPage = 10): LengthAwarePaginator
     {
         return StockMovement::with('product:id,name,sku', 'user:id,name')
             ->when($search, fn($q) => $q->whereHas('product', fn($p) => $p->where('name', 'like', "%{$search}%")))

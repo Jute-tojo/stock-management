@@ -10,6 +10,9 @@ import Pagination from '@/components/Pagination.vue';
 import ProductDialog from '@/components/ProductDialog.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+    Dialog, DialogContent,
+} from '@/components/ui/dialog';
 import { useProductForm } from '@/composables/useProductForm';
 import type { ProductPaginate, Category } from '@/types';
 
@@ -43,6 +46,8 @@ watch(search, (val) => {
 
 const dialogRef = ref<InstanceType<typeof ProductDialog>>();
 const categoryDialogOpen = ref(false);
+
+const previewImage = ref<string | null>(null);
 
 const { destroy } = useProductForm();
 </script>
@@ -96,12 +101,18 @@ const { destroy } = useProductForm();
                         class="border-b last:border-b-0 hover:bg-muted/50"
                     >
                         <td class="px-4 py-3">
-                            <img
+                            <button
                                 v-if="product.image_url"
-                                :src="product.image_url"
-                                alt="Product"
-                                class="size-10 rounded-md object-contain"
-                            />
+                                type="button"
+                                class="cursor-pointer"
+                                @click="previewImage = product.image_url"
+                            >
+                                <img
+                                    :src="product.image_url"
+                                    alt="Product"
+                                    class="size-10 rounded-md object-contain"
+                                />
+                            </button>
                             <PackageIcon v-else class="size-10 text-muted-foreground" />
                         </td>
                         <td class="px-4 py-3 text-sm">{{ product.name }}</td>
@@ -142,6 +153,7 @@ const { destroy } = useProductForm();
         ref="dialogRef"
         :categories="categories"
         :units="units"
+        @open-categories="categoryDialogOpen = true"
     />
 
     <CategoryDialog
@@ -149,4 +161,15 @@ const { destroy } = useProductForm();
         :categories="categories"
         @close="categoryDialogOpen = false"
     />
+
+    <Dialog :open="!!previewImage" @update:open="previewImage = null">
+        <DialogContent class="sm:max-w-lg">
+            <img
+                v-if="previewImage"
+                :src="previewImage"
+                alt="Product image"
+                class="max-h-[80vh] w-full rounded-md object-contain"
+            />
+        </DialogContent>
+    </Dialog>
 </template>
