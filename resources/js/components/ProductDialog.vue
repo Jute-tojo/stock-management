@@ -30,6 +30,7 @@ const {
     form,
     isOpen,
     isEdit,
+    editingProduct,
     submit,
     openCreateModal,
     openEditModal,
@@ -56,9 +57,9 @@ defineExpose({ openCreateModal, openEditModal });
                     <InputError :message="form.errors.name" />
                 </div>
 
-                <div class="grid gap-2">
+                <div v-if="isEdit" class="grid gap-2">
                     <Label for="sku">SKU</Label>
-                    <Input id="sku" v-model="form.sku" placeholder="Product SKU" />
+                    <Input id="sku" v-model="form.sku" disabled />
                     <InputError :message="form.errors.sku" />
                 </div>
 
@@ -117,6 +118,9 @@ defineExpose({ openCreateModal, openEditModal });
                 <div class="grid gap-2">
                     <Label for="image">Image</Label>
                     <Input id="image" type="file" accept="image/jpeg,image/png,image/gif,image/webp" @input="form.image = ($event.target as HTMLInputElement).files?.[0] ?? null" />
+                    <div v-if="isEdit && editingProduct?.image_url" class="mt-2">
+                        <img :src="editingProduct.image_url" alt="Current image" class="h-20 w-20 rounded-md object-cover" />
+                    </div>
                     <InputError :message="form.errors.image" />
                 </div>
 

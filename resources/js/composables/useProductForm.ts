@@ -52,10 +52,13 @@ export const useProductForm = () => {
 
     const submit = () => {
         if (isEdit.value && editingProduct.value) {
-            form.patch(`/products/${editingProduct.value.id}`, {
-                preserveScroll: true,
-                onSuccess: () => closeModal(),
-            });
+            form
+                .transform((data) => ({ ...data, _method: 'PATCH' }))
+                .post(`/products/${editingProduct.value.id}`, {
+                    preserveScroll: true,
+                    onSuccess: () => closeModal(),
+                    onFinish: () => form.transform((data) => data),
+                });
         } else {
             form.post('/products', {
                 preserveScroll: true,

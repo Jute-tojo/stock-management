@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
-import { Search, Plus, Pencil, Trash2 } from '@lucide/vue';
+import { Search, Plus, Pencil, Trash2, PackageIcon } from '@lucide/vue';
 import { useDebounceFn } from '@vueuse/core';
 import { watch, ref } from 'vue';
 import Heading from '@/components/Heading.vue';
@@ -39,6 +39,8 @@ watch(search, (val) => {
     debouncedSearch(val);
 });
 
+const unitLabelMap = Object.fromEntries(props.units.map((u) => [u.value, u.label]));
+
 const dialogRef = ref<InstanceType<typeof ProductDialog>>();
 
 const { destroy } = useProductForm();
@@ -72,6 +74,7 @@ const { destroy } = useProductForm();
             <table class="w-full">
                 <thead>
                     <tr class="border-b bg-muted/50">
+                        <th class="px-4 py-3 text-left text-sm font-medium">Image</th>
                         <th class="px-4 py-3 text-left text-sm font-medium">Name</th>
                         <th class="px-4 py-3 text-left text-sm font-medium">SKU</th>
                         <th class="px-4 py-3 text-left text-sm font-medium">Category</th>
@@ -87,12 +90,21 @@ const { destroy } = useProductForm();
                         :key="product.id"
                         class="border-b last:border-b-0 hover:bg-muted/50"
                     >
+                        <td class="px-4 py-3">
+                            <img
+                                v-if="product.image_url"
+                                :src="product.image_url"
+                                alt="Product"
+                                class="size-10 rounded-md object-cover"
+                            />
+                            <PackageIcon v-else class="size-10 text-muted-foreground" />
+                        </td>
                         <td class="px-4 py-3 text-sm">{{ product.name }}</td>
                         <td class="px-4 py-3 text-sm text-muted-foreground">{{ product.sku }}</td>
                         <td class="px-4 py-3 text-sm">{{ product.category?.name ?? '-' }}</td>
                         <td class="px-4 py-3 text-right text-sm">{{ Number(product.price).toFixed(2) }}</td>
                         <td class="px-4 py-3 text-right text-sm">{{ product.quantity }}</td>
-                        <td class="px-4 py-3 text-sm">{{ product.unit }}</td>
+                        <td class="px-4 py-3 text-sm">{{ unitLabelMap[product.unit] ?? product.unit }}</td>
                         <td class="px-4 py-3 text-right">
                             <div class="flex items-center justify-end gap-1">
                                 <Button variant="ghost" size="icon-sm" @click="dialogRef?.openEditModal(product)">
@@ -105,7 +117,7 @@ const { destroy } = useProductForm();
                         </td>
                     </tr>
                     <tr v-if="products.data.length === 0">
-                        <td colspan="7" class="px-4 py-8 text-center text-sm text-muted-foreground">
+                        <td colspan="8" class="px-4 py-8 text-center text-sm text-muted-foreground">
                             No products found.
                         </td>
                     </tr>
@@ -113,7 +125,12 @@ const { destroy } = useProductForm();
             </table>
         </div>
 
-        <Pagination :meta="products.meta" />
+        <Pagination
+            :current_page="products.current_page"
+            :last_page="products.last_page"
+            :per_page="products.per_page"
+            :total="products.total"
+        />
     </div>
 
     <ProductDialog

@@ -3,6 +3,7 @@ export type Product = {
     name: string;
     sku: string;
     image: string | null;
+    image_url: string | null;
     description: string | null;
     price: number;
     quantity: number;
@@ -12,12 +13,10 @@ export type Product = {
 
 export type ProductPaginate = {
     data: Product[];
-    meta: {
-        current_page: number;
-        last_page: number;
-        per_page: number;
-        total: number;
-    };
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
 };
 
 export type ProductFormData = {
