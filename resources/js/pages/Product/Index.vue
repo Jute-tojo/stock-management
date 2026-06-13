@@ -3,6 +3,7 @@ import { Head, router } from '@inertiajs/vue3';
 import { Search, Plus, Pencil, Trash2, PackageIcon } from '@lucide/vue';
 import { useDebounceFn } from '@vueuse/core';
 import { watch, ref } from 'vue';
+import { index as productIndex } from '@/routes/products';
 import Heading from '@/components/Heading.vue';
 import Pagination from '@/components/Pagination.vue';
 import ProductDialog from '@/components/ProductDialog.vue';
@@ -29,7 +30,7 @@ const props = defineProps<{
 const search = ref(props.filters ?? '');
 
 const debouncedSearch = useDebounceFn((value: string) => {
-    router.get('/products', { search: value || null }, {
+    router.get(productIndex.url({ query: { search: value || null } }), {}, {
         preserveState: true,
         replace: true,
     });

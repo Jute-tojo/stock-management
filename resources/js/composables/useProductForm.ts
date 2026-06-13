@@ -1,5 +1,6 @@
 import { useForm, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { store, update, destroy as destroyRoute } from '@/routes/products';
 import type { Product, ProductFormData } from '@/types';
 
 const emptyForm: ProductFormData = {
@@ -54,13 +55,13 @@ export const useProductForm = () => {
         if (isEdit.value && editingProduct.value) {
             form
                 .transform((data) => ({ ...data, _method: 'PATCH' }))
-                .post(`/products/${editingProduct.value.id}`, {
+                .post(update.url(editingProduct.value.id), {
                     preserveScroll: true,
                     onSuccess: () => closeModal(),
                     onFinish: () => form.transform((data) => data),
                 });
         } else {
-            form.post('/products', {
+            form.post(store.url(), {
                 preserveScroll: true,
                 onSuccess: () => closeModal(),
             });
@@ -68,7 +69,7 @@ export const useProductForm = () => {
     };
 
     const destroy = (product: Product) => {
-        router.delete(`/products/${product.id}`, {
+        router.delete(destroyRoute.url(product.id), {
             preserveScroll: true,
         });
     };
