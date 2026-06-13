@@ -37,4 +37,12 @@ class Product extends Model
     {
         return $this->hasMany(StockMovement::class);
     }
+
+    protected static function booted(): void
+    {
+        static::creating(function (Product $product) {
+            $lastId = static::max('id') ?? 0;
+            $product->sku = 'PRO-' . str_pad($lastId + 1, 6, '0', STR_PAD_LEFT);
+        });
+    }
 }
