@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
-import { Search, Plus, Pencil, Trash2, PackageIcon } from '@lucide/vue';
+import { Search, Plus, Pencil, Trash2, PackageIcon, Tags } from '@lucide/vue';
 import { useDebounceFn } from '@vueuse/core';
 import { watch, ref } from 'vue';
 import { index as productIndex } from '@/routes/products';
+import CategoryDialog from '@/components/CategoryDialog.vue';
 import Heading from '@/components/Heading.vue';
 import Pagination from '@/components/Pagination.vue';
 import ProductDialog from '@/components/ProductDialog.vue';
@@ -41,6 +42,7 @@ watch(search, (val) => {
 });
 
 const dialogRef = ref<InstanceType<typeof ProductDialog>>();
+const categoryDialogOpen = ref(false);
 
 const { destroy } = useProductForm();
 </script>
@@ -67,6 +69,10 @@ const { destroy } = useProductForm();
                     class="pl-9"
                 />
             </div>
+            <Button variant="outline" size="sm" @click="categoryDialogOpen = true">
+                <Tags class="size-4" />
+                Categories
+            </Button>
         </div>
 
         <div class="rounded-lg border">
@@ -136,5 +142,11 @@ const { destroy } = useProductForm();
         ref="dialogRef"
         :categories="categories"
         :units="units"
+    />
+
+    <CategoryDialog
+        v-if="categoryDialogOpen"
+        :categories="categories"
+        @close="categoryDialogOpen = false"
     />
 </template>
