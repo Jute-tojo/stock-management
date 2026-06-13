@@ -6,13 +6,11 @@ import { ref, watch } from 'vue';
 import Heading from '@/components/Heading.vue';
 import Pagination from '@/components/Pagination.vue';
 import InputError from '@/components/InputError.vue';
+import ProductSearch from '@/components/ProductSearch.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import {
-    Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from '@/components/ui/select';
 import { index as movementIndex } from '@/routes/stock-movements';
 import { useStockMovementForm } from '@/composables/useStockMovementForm';
 import type { StockMovementPaginate, Product } from '@/types';
@@ -97,20 +95,12 @@ const typeLabel = (type: string) => {
         <div v-if="activeTab === 'form'" class="rounded-lg border bg-card p-6">
             <h3 class="mb-4 text-lg font-semibold">New Stock Movement</h3>
             <form @submit.prevent="submit" class="space-y-4">
-                <div class="grid gap-2">
-                    <Label for="product">Product</Label>
-                    <Select v-model="form.product_id">
-                        <SelectTrigger id="product">
-                            <SelectValue placeholder="Select a product" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem v-for="product in products" :key="product.id" :value="product.id">
-                                {{ product.name }} ({{ product.sku }})
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <InputError :message="form.errors.product_id" />
-                </div>
+                <ProductSearch
+                    :products="products"
+                    :model-value="form.product_id"
+                    :error="form.errors.product_id"
+                    @update:model-value="form.product_id = $event"
+                />
 
                 <div class="grid gap-2">
                     <Label>Type</Label>
