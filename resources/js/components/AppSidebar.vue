@@ -16,6 +16,7 @@ import {
 import { dashboard } from '@/routes';
 import { index as productIndex } from '@/routes/products';
 import { index as clientIndex } from '@/routes/clients';
+import { index as stockIndex } from '@/routes/stock-movements';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -31,7 +32,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Stock',
-        href: dashboard(),
+        href: stockIndex(),
         icon: WarehouseIcon,
     },
     {

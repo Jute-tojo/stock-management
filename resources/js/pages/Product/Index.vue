@@ -96,7 +96,7 @@ const { destroy } = useProductForm();
                                 v-if="product.image_url"
                                 :src="product.image_url"
                                 alt="Product"
-                                class="size-10 rounded-md object-cover"
+                                class="size-10 rounded-md object-contain"
                             />
                             <PackageIcon v-else class="size-10 text-muted-foreground" />
                         </td>

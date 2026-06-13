@@ -3,6 +3,7 @@ import { Head } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Heading from '@/components/Heading.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { index as stockIndex } from '@/routes/stock-movements';
 
 defineOptions({ layout: AppLayout });
 </script>
@@ -40,7 +41,7 @@ defineOptions({ layout: AppLayout });
                     <CardDescription>Track inventory movements</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <span class="text-sm text-muted-foreground">Coming soon</span>
+                    <a :href="stockIndex().url" class="text-sm text-primary underline underline-offset-4">Manage stock</a>
                 </CardContent>
             </Card>
         </div>
