@@ -46,6 +46,8 @@ class ProductService
             }
 
             $data['image'] = $data['image']->store('products', 'public');
+        } else {
+            unset($data['image']);
         }
 
         $product->update($data);

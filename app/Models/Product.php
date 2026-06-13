@@ -20,12 +20,19 @@ class Product extends Model
         'unit',
     ];
 
+    protected $appends = ['image_url'];
+
     protected function casts(): array
     {
         return [
             'unit' => ProductUnit::class,
             'price' => 'decimal:2',
         ];
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->image ? url('storage/' . $this->image) : null;
     }
 
     public function category(): BelongsTo
