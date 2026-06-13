@@ -19,6 +19,10 @@ class CategoryService
 
     public function delete(Category $category): void
     {
+        if ($category->products()->count() > 0) {
+            throw new \RuntimeException('Cannot delete category with linked products.');
+        }
+
         $category->delete();
     }
 

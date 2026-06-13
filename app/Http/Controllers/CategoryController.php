@@ -31,9 +31,13 @@ class CategoryController extends Controller
 
     public function destroy(Category $category): RedirectResponse
     {
-        $this->categoryService->delete($category);
+        try {
+            $this->categoryService->delete($category);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Category deleted.']);
+            Inertia::flash('toast', ['type' => 'success', 'message' => 'Category deleted.']);
+        } catch (\RuntimeException $e) {
+            Inertia::flash('toast', ['type' => 'error', 'message' => $e->getMessage()]);
+        }
 
         return back();
     }

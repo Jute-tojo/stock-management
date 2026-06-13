@@ -71,7 +71,12 @@ const remove = (category: Category) => {
                         <span class="text-sm">{{ cat.name }}</span>
                         <Badge variant="secondary" class="text-xs">{{ cat.products_count ?? 0 }} products</Badge>
                     </div>
-                    <Button variant="ghost" size="icon-sm" @click="remove(cat)">
+                    <Button
+                        variant="ghost" size="icon-sm"
+                        :disabled="(cat.products_count ?? 0) > 0"
+                        :title="(cat.products_count ?? 0) > 0 ? 'Cannot delete: has linked products' : 'Delete category'"
+                        @click="remove(cat)"
+                    >
                         <Trash2 class="size-4 text-destructive" />
                     </Button>
                 </div>
