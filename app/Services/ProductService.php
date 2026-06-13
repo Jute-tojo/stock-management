@@ -3,24 +3,51 @@
 namespace App\Services;
 
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Storage;
 
 class ProductService
 {
-    public function list(): LengthAwarePaginator
+    public function list(?string $keyword = null, int $perPage = 10): LengthAwarePaginator
     {
-        return Product::with('category')
+        return $this->applySearch(Product::with('category'), $keyword)
             ->latest()
-            ->paginate(10);
+            ->paginate($perPage);
+    }
+
+    private function applySearch(Builder $query, ?string $keyword): Builder
+    {
+        if ($keyword) {
+            $query->where(function (Builder $q) use ($keyword) {
+                $q->where('name', 'like', "%{$keyword}%")
+                  ->orWhere('sku', 'like', "%{$keyword}%");
+            });
+        }
+
+        return $query;
     }
 
     public function store(array $data): Product
     {
+        if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
+            $data['image'] = $data['image']->store('products', 'public');
+        }
+
         return Product::create($data);
     }
 
     public function update(Product $product, array $data): Product
     {
+        if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+
+            $data['image'] = $data['image']->store('products', 'public');
+        }
+
         $product->update($data);
 
         return $product;
@@ -28,6 +55,10 @@ class ProductService
 
     public function delete(Product $product): void
     {
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+
         $product->delete();
     }
 }

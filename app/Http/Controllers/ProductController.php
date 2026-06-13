@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProductUnit;
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
+use App\Services\CategoryService;
 use App\Services\ProductService;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -12,13 +14,19 @@ use Inertia\Response;
 class ProductController extends Controller
 {
     public function __construct(
-        private readonly ProductService $productService
+        private readonly ProductService $productService,
+        private readonly CategoryService $categoryService,
     ) {}
 
     public function index(): Response
     {
+        $search = request('search');
+
         return Inertia::render('Product/Index', [
-            'products' => $this->productService->list(),
+            'products' => $this->productService->list($search, 10),
+            'categories' => $this->categoryService->list(),
+            'units' => ProductUnit::options(),
+            'filters' => $search,
         ]);
     }
 
